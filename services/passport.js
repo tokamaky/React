@@ -5,6 +5,17 @@ const keys = require('../config/keys');
 
 const User = mongoose.model('users');
 
+passport.serializeUser((user,done) => {
+   done(null,user.id);
+});
+
+passport.deserializeUser((id,done) => {
+    User.findById(id)
+    .then( user => {
+        done(null, user);
+    });
+ });
+
 passport.use(
     new GoogleStrategy({
      clientID:keys.googleClientID,
@@ -12,7 +23,16 @@ passport.use(
      callbackURL:'/auth/google/callback'
     },
     (accessToken, refreshToken, progile, done)=>{
-     new User({googleId: profile.id}).save();
+     //check if there's already an account of user 
+     User.findOne({googleId: profile.id}).then(existingUser => {
+         if(existingUser) {
+             done(null, existingUser);
+         }else{
+             new User({googleId: profile.id})
+             .save()
+             .then(user=> done(null, user));
+         }
+       });
     }
  )
 );
