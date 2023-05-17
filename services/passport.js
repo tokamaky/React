@@ -22,7 +22,7 @@ passport.use(
      clientSecret:keys.googleClientSecret,
      callbackURL:'/auth/google/callback'
     },
-    (accessToken, refreshToken, progile, done)=>{
+    (accessToken, refreshToken, profile, done)=>{
      //check if there's already an account of user 
      User.findOne({googleId: profile.id}).then(existingUser => {
          if(existingUser) {
