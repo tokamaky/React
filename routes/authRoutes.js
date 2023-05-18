@@ -11,7 +11,10 @@ app.get(
 //google sign in application 
 app.get(
     '/auth/google/callback',
-    passport.authenticate('google')
+    passport.authenticate('google'),
+    (req,res) => {
+        res.redirect('/surveys');
+    }
 );
 
 //logout for user
