@@ -6,7 +6,9 @@ npm install --save nodemon
 npm install --save mongoose
 npm install --save cookie-session
 npx create-react-app client
-
+npm install --save concurrently
+IN CLIENT DIR: npm install http-proxy-middleware@2 
+IN CLIENT DIR: npm run build
 npm run dev
 Ap54Z4e1lemseXLG
 
