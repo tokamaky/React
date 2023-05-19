@@ -5,6 +5,7 @@ npm install --save passport@0.5 passport-google-oauth20
 npm install --save nodemon
 npm install --save mongoose
 npm install --save cookie-session
+npx create-react-app client
 
 npm run dev
 Ap54Z4e1lemseXLG
