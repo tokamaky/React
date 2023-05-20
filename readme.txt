@@ -9,7 +9,9 @@ npx create-react-app client
 npm install --save concurrently
 IN CLIENT DIR: npm install http-proxy-middleware@2 
 IN CLIENT DIR: npm run build
+npm install redux react-redux react-router-dom@5 
 npm run dev
+
 Ap54Z4e1lemseXLG
 
 in keys.js :cookieKey: 'asbdkasbdasjhbdakshdbakshdbaksdbaskdasd'
