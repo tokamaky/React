@@ -11,6 +11,8 @@ IN CLIENT DIR: npm install http-proxy-middleware@2
 IN CLIENT DIR: npm run build
 npm install redux react-redux react-router-dom@5 
 npm install materialize-css@next
+
+CLIENT: npm install --save axios redux-thunk
 npm run dev
 
 Ap54Z4e1lemseXLG
