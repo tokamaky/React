@@ -36,7 +36,7 @@ class Header extends Component{
     }
 }
 
-function mapStateToProps({state}) {
+function mapStateToProps({ auth }) {
     return { auth };
 }
 
