@@ -14,6 +14,9 @@ npm install materialize-css@next
 
 CLIENT: npm install --save axios redux-thunk
 CLIENT: npm install --save react-stripe-checkout
+npm install --save stripe
+npm install --save body-parser
+arser
 npm run dev
 
 Ap54Z4e1lemseXLG
