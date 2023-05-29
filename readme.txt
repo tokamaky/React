@@ -16,6 +16,7 @@ CLIENT: npm install --save axios redux-thunk
 CLIENT: npm install --save react-stripe-checkout
 npm install --save stripe
 npm install --save body-parser
+CLIENT: npm rum build
 arser
 npm run dev
 
