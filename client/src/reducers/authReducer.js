@@ -9,3 +9,5 @@ export default function(state =null, action){
          return state;
     }
 }
+
+export default authReducer;
