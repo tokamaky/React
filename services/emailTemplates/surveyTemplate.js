@@ -1,5 +1,6 @@
 const keys = require('../../config/keys')
 module.exports = (survey) => {
+  //using ` for multiline strings
   return `
     <html>
       <body>
