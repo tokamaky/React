@@ -1,41 +1,36 @@
 const mailgun = require('mailgun-js');
-const sendgrid = require('sendgrid');
-const helper = sendgrid.mail;
 const keys = require('../config/keys');
 
-class Mailer extends helper.Mail {
-    constructor ({ subject, recipients }, content) {
-        //to make sure make sure that any constructor that is 
-        //defined on the middle class gets executed 
-        //like calling the super function so super right here.
-        super();
+class Mailer {
+  constructor({ subject, recipients }, content) {
+    this.mailgun = mailgun({ apiKey: keys.mailGunKey, domain: keys.mailgunDomain });
+    this.from = 'no-reply@emaily.com';
+    this.subject = subject;
+    this.html = content;
+    this.recipients = this.formatAddresses(recipients);
+    
+  }
 
-        
-        this.sgApi = sendgrid(keys.sendGridKey);
-        this.from_email = new helper.Email('no-reply@emaily.com');
-        this.subject = subject;
-        this.body = new helper.Content('text/html', content);
-        this.recipients = this.formatAddresses(recipients);
+  formatAddresses(recipients) {
+    return recipients.map(({ email }) => email);
+  }
 
-        this.addContent(this.body);
-        this.addClickTracking();
-        this.addRecipients();
+  async send() {
+    const data = {
+      from: this.from,
+      to: this.recipients.join(','),
+      subject: this.subject,
+      html: this.html
+    };
+
+    try {
+      const response = await this.mailgun.messages().send(data);
+      return response;
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw error;
     }
-
-    formatAddresses(recipients){
-        return recipients.map(({ email }) => {
-            return new helper.Email(email);
-        });
-    }
-
-    addClickTracking(){
-        const trackingSettings = new helper.TrackingSettings();
-        const clickTracking = new helper.clickTracking(true, true);
-
-        trackingSettings.setClickTracking(clickTracking);
-        this.addTrackSettings(trackingSettings);
-    }
-
+  }
 }
 
 module.exports = Mailer;
