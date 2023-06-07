@@ -26,12 +26,16 @@ class SurveyNew extends Component {
       />
     )
   }
-  render() {
-    return <div>{this.renderContent()}</div>
+  render() {				   
+    return (
+		<div>
+		{this.renderContent()}
+		</div>
+	);  
   }
 }
 
 export default reduxForm({
   form: 'surveyForm',
-  destroyOnUnmount: true // this value is the default value so it's not necessary to put it
+ // destroyOnUnmount: true // this value is the default value so it's not necessary to put it
 })(SurveyNew)

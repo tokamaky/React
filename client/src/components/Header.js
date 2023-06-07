@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Payments from "./Payments";
 
 class Header extends Component{
-    readerContent(){
+    renderContent(){
         switch(this.props.auth){
             case null:
                 return;
@@ -35,7 +35,7 @@ class Header extends Component{
                    Emaily
                 </Link>
                 <ul className="right">
-                    {this.readerContent()};
+                    {this.renderContent()};
                 </ul>
               </div>
             </nav>
