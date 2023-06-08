@@ -49,7 +49,7 @@ function validate(values) {
   })
   return errors
 }
-
+//clean every record if user cancel send and back to homepage
 export default reduxForm({
   validate,
   form: 'surveyForm',

@@ -3,11 +3,12 @@ const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
 const Mailer = require('../services/Mailer');
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
-const mailgun = require('mailgun-js');
+const SibApiV3Sdk = require('sib-api-v3-sdk');
 const keys = require('../config/keys');
 
 const Survey = mongoose.model('surveys');
-const mg = mailgun({ apiKey: keys.mailGunKey, domain: keys.mailgunDomain });
+const sendinblue = new SibApiV3Sdk.TransactionalEmailsApi();
+const apiKey = keys.sendinblueApiKey;
 
 module.exports = app => {
   app.get('/api/surveys', requireLogin, async (req, res) => {
@@ -35,16 +36,26 @@ module.exports = app => {
       body,
       recipients: recipients.split(',').map(email => ({ email: email.trim() })),
       _user: req.user.id,
-      dateSent: Date.now(),
+      dateSent: Date.now()
     });
 
     const mailer = new Mailer(survey, surveyTemplate(survey));
     try {
-      await mailer.send(); // Send email using Mailgun
-      await survey.save(); // Create the new survey in the MongoDB database
-      req.user.credits -= 1; // Reduce the number of credits
-      const user = await req.user.save(); // Update the user's credits
-      res.send(user); // Update the balance in the header
+      const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+      sendSmtpEmail.sender = { email: mailer.from };
+      sendSmtpEmail.subject = mailer.subject;
+      sendSmtpEmail.htmlContent = mailer.html;
+      sendSmtpEmail.to = mailer.recipients;
+
+      const sendEmailOptions = {
+        sendSmtpEmail,
+      };
+
+      await sendinblue.sendTransacEmail(sendEmailOptions, apiKey);
+      await survey.save();
+      req.user.credits -= 1;
+      const user = await req.user.save();
+      res.send(user);
     } catch (error) {
       res.status(422).send(error);
     }
