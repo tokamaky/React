@@ -1,39 +1,48 @@
-const SibApiV3Sdk = require('sib-api-v3-sdk');
+const mailjet = require('node-mailjet');
 const keys = require('../config/keys');
 
 class Mailer {
   constructor({ subject, recipients }, content) {
-    this.sendinblue = new SibApiV3Sdk.TransactionalEmailsApi();
-    this.apiKey = keys.sendinblueApiKey;
-    this.from = { email: 'no-reply@emaily.com' };
+    this.mailjet = mailjet.apiConnect(
+      keys.mailjetPublicKey,
+      keys.mailjetPrivateKey
+    );
+    this.fromEmail = 'no-reply@emaily.com';
     this.subject = subject;
-    this.htmlContent = content;
+    this.content = content;
     this.recipients = this.formatAddresses(recipients);
   }
 
   formatAddresses(recipients) {
-    return recipients.map(({ email }) => ({ email }));
+    return recipients.map(({ email }) => {
+      return { Email: email };
+    });
   }
 
   async send() {
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = this.from;
-    sendSmtpEmail.subject = this.subject;
-    sendSmtpEmail.htmlContent = this.htmlContent;
-    sendSmtpEmail.to = this.recipients;
-
-    const sendEmailOptions = {
-      sendSmtpEmail,
-    };
-
+    const messages = [
+      {
+        From: {
+          Email: this.fromEmail,
+        },
+        To: this.recipients,
+        Subject: this.subject,
+        HTMLPart: this.content,
+      },
+    ];
+  
+    const request = this.mailjet
+      .post('send', { version: 'v3.1' })
+      .request({ Messages: messages });
+  
     try {
-      const response = await this.sendinblue.sendTransacEmail(sendEmailOptions, this.apiKey);
-      return response;
-    } catch (error) {
-      console.error('Error sending email:', error);
-      throw error;
+      const response = await request;
+      return response.body;
+    } catch (err) {
+      throw err;
     }
   }
+  
 }
 
 module.exports = Mailer;
