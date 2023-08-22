@@ -31,6 +31,8 @@ test Ji186045
 
 > source code for the Node With React Fullstack Web Development Udemy course
 
+React, node.js, mongodb, googleauth2, 
+
 ## Build Setup
 
 # install server dependencies
